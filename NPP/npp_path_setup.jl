@@ -19,17 +19,17 @@ if Sys.iswindows() == false
         ctdlocationpath = string(workdir, "NPP_ctd_locations.csv");
     elseif "Shabangin" in dirstr
         println("Mirella's system.")
-        ctddir = string(ENV["HOME"], "/Research/NPP/"); # this is where your data directory is specified
+        ctddir = string(ENV["HOME"], "/Research/NPP/data/"); # this is where your data directory is specified
 
-        ctddatadir = string(ctddir,"cnv3/"); # this is where your CNV data directory is specified
+        ctddatadir = string(ctddir,"cnv/"); # this is where your CNV data directory is specified
         ctddatapath = Glob.glob("*.cnv",ctddatadir);
 
-        ctddatadircsv = string(ctddir,"csv3/") # this is your your CSV data directory is specified (not needed if just using CNV files)
+        ctddatadircsv = string(ctddir,"csv/") # this is your your CSV data directory is specified (not needed if just using CNV files)
         ctddatapathcsv = Glob.glob("*.csv",ctddatadircsv);
 
         workdir = ctddir; # this is where your work directory is specified
         filepath = string(workdir, "NPP_ctd_data", ".jld2"); # define the name of the data file to store the loaded CTD data in JLD2 format
-        figoutdir = string(ctddir, "figures3/");
+        figoutdir = string(ctddir, "figures/");
         ctdlocationpath = string(workdir, "NPP_ctd_locations.csv");
     end
 else

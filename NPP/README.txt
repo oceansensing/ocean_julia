@@ -11,7 +11,8 @@ Installation:
 0) Grab all NPP CTD data in CNV format and place into a data directory (e.g. /Users/gong/Research/NPP/data/cnv or c:\Users\rivera\Research\NPP\data\cnv)
 1) Unzip all content in NPP.zip into its own directory (e.g. /Users/gong/Research/NPP/ or c:\Users\rivera\Research\NPP\), this is your work directory.
 #2) Install Anaconda3. Open a new Terminal window, then type "conda update conda", and "conda update anaconda".
-3) Type "pip install cmocean" in the Terminal.
+3a) Type "pip install cmocean" in the Terminal.
+3b) Type "conda install scikit-learn".
 4) Download and install Julia from https://julialang.org/ on to your computer. Version 1.3 or higher.
 
 Setup:
