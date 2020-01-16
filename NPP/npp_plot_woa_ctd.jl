@@ -16,6 +16,7 @@ profile = npp_load_woa(i);
 
 # load profile plotting flag
 include("npp_flags.jl")
+include("npp_path_setup.jl")
 #woaplotflag = 1 # change this to 1 if you want to make NPP CTD & WOA comparison plots, not active, use npp_flags.jl
 
 if woaplotflag == 1
