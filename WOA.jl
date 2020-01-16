@@ -10,7 +10,7 @@ end
 
 export npp_load_woa, load_woa, season, Profile, WOAdata
 
-include("npp_path_setup.jl")
+include("NPP/npp_path_setup.jl")
 
 mutable struct Profile
     z::Array{Float64}
