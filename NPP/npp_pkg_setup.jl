@@ -41,8 +41,8 @@ using Conda
 Conda.add("cmocean",channel="conda-forge")
 
 if Sys.iswindows() == false
-    #ENV["PYTHON"] = ENV["HOME"] * "/anaconda3/bin/python3"
-    ENV["PYTHON"] = ENV["HOME"] * "/.julia/conda/3/bin/python3"
+    ENV["PYTHON"] = ENV["HOME"] * "/anaconda3/bin/python3"
+    #ENV["PYTHON"] = ENV["HOME"] * "/.julia/conda/3/bin/python3"
 else
     ENV["PYTHON"] = "C:" * ENV["HOMEPATH"] * "\\.julia\\conda\\3\\python.exe"
 end
