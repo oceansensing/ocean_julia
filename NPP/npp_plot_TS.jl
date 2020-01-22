@@ -1,9 +1,13 @@
 # npp_plot_TS.jl
-using PyCall, PyPlot, NaNMath
-cmo = pyimport("cmocean")
+using PyCall, PyPlot, NaNMath, Clustering
 plt = PyPlot;
 nm = NaNMath;
+cmo = pyimport("cmocean")
+#cluster = pyimport("sklearn.cluster")
 import Gong
+
+calcflag = 0
+plotflag = 2
 
 if (@isdefined ctd) == false
     include("run_npp_load_ctd.jl")
@@ -35,30 +39,54 @@ function load_TS(ctd)
     return Float64.(ctdtemp), Float64.(ctdsalt), Float64.(ctdsigma0), Float64.(ctdoxy), Float64.(ctdlon), Float64.(ctdlat)
 end
 
-(temp, salt, sigma0, oxy, lon, lat) = load_TS(ctd);
+if calcflag == 1
+    (temp, salt, sigma0, oxy, lon, lat) = load_TS(ctd);
 
-(tempscl, tempmin, tempmax) = Gong.minmaxscaler(temp,[0 1]);
-(saltscl, saltmin, saltmax) = Gong.minmaxscaler(salt,[0 1]);
-(oxyscl, oxymin, oxymax) = Gong.minmaxscaler(oxy,[0 1]);
+    (tempscl, tempmin, tempmax) = Gong.minmaxscaler(temp,[0 1]);
+    (saltscl, saltmin, saltmax) = Gong.minmaxscaler(salt,[0 1]);
+    (oxyscl, oxymin, oxymax) = Gong.minmaxscaler(oxy,[0 1]);
 
-datascl = permutedims([tempscl saltscl oxyscl]);
+    datascl = permutedims([tempscl saltscl oxyscl]);
+    clusters = dbscan(datascl[:,1:4:end], 0.05, min_neighbors = 100, min_cluster_size = 4000);
+end
+
+if plotflag == 2
+    figCluster = plt.figure(2)
+    clf()
+    axC = figCluster.add_subplot(1, 1, 1)
+    #for i = 1:length(clusters)
+    for i = 1:1
+        println(i)
+        corei = clusters[i].core_indices;
+        bndyi = clusters[i].boundary_indices;
+        hpC = plt.scatter(salt[corei],temp[corei],s=1.0)
+        hpB = plt.scatter(salt[bndyi],temp[bndyi],s=1.0)
+    end
+    axC.set_title("NPP T/S Diagram")
+    axC.set_xlabel("Salinity")
+    axC.set_ylabel("Temperature")
+end
 
 
+#datascl = [tempscl saltscl oxyscl];
+#db = cluster.dbscan(datascl[1:4:end,:], eps=0.1, min_samples=10)
 
-figTS = plt.figure(1)
-clf()
-ax = figTS.add_subplot(1, 1, 1)
-#axT = fig.add_subplot(2, 2, 1)
-hpTS = plt.scatter3D(salt, temp, oxy, s=1.0, c=sigma0, cmap=cmo.cm.thermal) #mpl.cm.coolwarm
-#hcT = ax.contour(transect[i].xgrid, transect[i].ygrid, transect[i].sigma0grid, colors="k")
-#ax.clabel(hcT, inline=1, fontsize=9);
-ax.set_title("NPP T/S Diagram")
-ax.set_xlabel("Salinity")
-ax.set_ylabel("Temperature")
-#ax.set_zlabel("Oxygen")
-#ax.set_xlim(xmin,xmax)
-#ax.set_ylim(ymin,ymax)
-#hpTS.set_clim(-2,2)
-figTS.colorbar(hpTS,ax=ax)
-#fig.colorbar(hpT1,ax=axT)
-#plt.savefig(string(figoutdir, "ctmp_", i, npp.sectname[i], "_full.png"), dpi = 300)
+if plotflag == 1
+    figTS = plt.figure(1)
+    clf()
+    ax = figTS.add_subplot(1, 1, 1)
+    #axT = fig.add_subplot(2, 2, 1)
+    hpTS = plt.scatter3D(salt, temp, oxy, s=1.0, c=sigma0, cmap=cmo.cm.thermal) #mpl.cm.coolwarm
+    #hcT = ax.contour(transect[i].xgrid, transect[i].ygrid, transect[i].sigma0grid, colors="k")
+    #ax.clabel(hcT, inline=1, fontsize=9);
+    ax.set_title("NPP T/S Diagram")
+    ax.set_xlabel("Salinity")
+    ax.set_ylabel("Temperature")
+    #ax.set_zlabel("Oxygen")
+    #ax.set_xlim(xmin,xmax)
+    #ax.set_ylim(ymin,ymax)
+    #hpTS.set_clim(-2,2)
+    figTS.colorbar(hpTS,ax=ax)
+    #fig.colorbar(hpT1,ax=axT)
+    #plt.savefig(string(figoutdir, "ctmp_", i, npp.sectname[i], "_full.png"), dpi = 300)
+end
