@@ -17,6 +17,12 @@ Pkg.add("SparseArrays")
 Pkg.add("DifferentialEquations")
 Pkg.add("LinearAlgebra")
 Pkg.add("Oceananigans")
+
+Pkg.add("Makie")
+Pkg.add("GeometryTypes")
+Pkg.add("Colors")
+Pkg.add("Interact")
+
 #Pkg.add("DiffEqFlux")
 Pkg.add("Flux")
 Pkg.add("MLJ")
@@ -165,3 +171,4 @@ using CSV, Glob, FileIO, JLD2, DataFrames #Serialization, FileIO, JLD
 using Missings, Dates
 using GSW, Statistics, NaNMath
 using IJulia, PyPlot, PyCall
+using Makie, Interact
