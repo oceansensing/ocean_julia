@@ -6,7 +6,7 @@ end
 
 using Pkg
 Pkg.add("IJulia")
-Pkg.add("Pandas")
+Pkg.add("PyCall")
 Pkg.add("ScikitLearn")
 Pkg.add("LsqFit")
 Pkg.add("TimeSeries")
