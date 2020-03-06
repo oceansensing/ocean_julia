@@ -6,8 +6,8 @@ end
 
 using Pkg
 Pkg.add("IJulia")
-Pkg.add("Conda")
 Pkg.add("PyCall")
+
 Pkg.add("ArgParse")
 Pkg.add("WorldOceanAtlasTools")
 Pkg.add("ShallowWaters")
@@ -28,22 +28,41 @@ Pkg.add("Colors")
 Pkg.add("Interact")
 Pkg.add("ImageFiltering")
 
-#Pkg.add("DiffEqFlux")
+Pkg.add("ScikitLearn")
+Pkg.add("LsqFit")
+Pkg.add("TimeSeries")
+Pkg.add("Indicators")
+Pkg.add("DynamicalSystems")
+Pkg.add("Oceananigans")
+Pkg.add("DifferentialEquations")
+Pkg.add("GeoJSON")
+Pkg.add("Pandas")
+Pkg.add("MATLAB")
+Pkg.add("Makie")
+Pkg.add("StatsPlots")
+Pkg.add("Interact")
+
+Pkg.add("ArgParse")
+Pkg.add("Revise")
+Pkg.add("Statistics")
+Pkg.add("SparseArrays")
+
 Pkg.add("Flux")
+Pkg.add("Lathe")
+Pkg.add("ClimateTools")
 Pkg.add("MLJ")
 Pkg.add("MLJBase")
 Pkg.add("MLJModels")
 Pkg.add("ScientificTypes")
 Pkg.add("MLJLinearModels")
 Pkg.add("XGBoost")
-Pkg.add("ScikitLearn")
 Pkg.add("Knet")
 Pkg.add("Turing")
 Pkg.add("BayesNets")
 Pkg.add("Clustering")
 Pkg.add("TimeSeries")
 Pkg.add("Measurements")
-PKg.add("Indicators")
+Pkg.add("Indicators")
 Pkg.add("GLM")
 Pkg.add("HypothesisTests")
 Pkg.add("StatsBase")
@@ -57,7 +76,7 @@ Pkg.add("NearestNeighbors")
 Pkg.add("DynamicalSystems")
 Pkg.add("StochasticDiffEq")
 Pkg.add("DiffEqBase")
-Pkg.add("DiffEqGPU")
+#Pkg.add("DiffEqGPU") # Note that this package somehow prevents a bunch of different packages from upgrading to the latest version. add with care!!!
 Pkg.add("ONNX")
 Pkg.add("Zygote")
 Pkg.add("LsqFit")
@@ -97,6 +116,7 @@ Pkg.add("CSV")
 Pkg.add("Feather")
 Pkg.add("DataFrames")
 Pkg.add("Query")
+Pkg.add("GeoJSON")
 #Pkg.add("JuliaDB")
 Pkg.add("LightGraphs")
 Pkg.add("FileIO")
@@ -136,22 +156,21 @@ Pkg.add("GPUArrays")
 Pkg.add("CuArrays")
 
 Pkg.add("Cxx")
-Pkg.add("MATLAB")
 #Pkg.add("Immerse")
 Pkg.add("BinaryBuilder")
 Pkg.add("BinaryProvider")
 
 Pkg.add("AWSS3")
-Pkg.add("SQLite")
+#Pkg.add("SQLite")
 Pkg.add("JuliaDB")
-Pkg.add("AWSSDK")
+#Pkg.add("AWSSDK")
 Pkg.add("Kuber")
 
 Pkg.add("PyPlot")
 Pkg.add("Pandas")
 Pkg.add("WebIO")
 Pkg.add("UnicodePlots")
-Pkg.add("Blink")
+#Pkg.add("Blink")
 Pkg.add("Plots")
 Pkg.add("StatsPlots")
 Pkg.add("PlotlyJS")
@@ -165,8 +184,8 @@ using Conda
 Conda.add("cmocean",channel="conda-forge")
 
 if Sys.iswindows() == false
-    ENV["PYTHON"] = ENV["HOME"] * "/anaconda3/bin/python3"
-    #ENV["PYTHON"] = ENV["HOME"] * "/.julia/conda/3/bin/python3"
+    #ENV["PYTHON"] = ENV["HOME"] * "/anaconda3/bin/python3"
+    ENV["PYTHON"] = ENV["HOME"] * "/.julia/conda/3/bin/python3"
 else
     ENV["PYTHON"] = "C:" * ENV["HOMEPATH"] * "\\.julia\\conda\\3\\python.exe"
 end
