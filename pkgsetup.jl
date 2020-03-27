@@ -14,6 +14,7 @@ Pkg.add("ShallowWaters")
 Pkg.add("PhysOcean")
 Pkg.add("AIBECS")
 Pkg.add("Revise")
+Pkg.add("Debugger")
 
 Pkg.add("Dates")
 Pkg.add("Statistics")
