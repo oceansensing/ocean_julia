@@ -1,7 +1,10 @@
-alias julia="/Applications/Julia-1.3.app/Contents/Resources/julia/bin/julia"
+alias julia="/Applications/Julia-1.4.app/Contents/Resources/julia/bin/julia"
 #alias matlabb="/Applications/MATLAB_R2019b.app/bin/matlab -nodesktop"
 export PATH=/Users/$USER/anaconda3/bin:$PATH
-#export JULIA_NUM_THREADS=4
+
+#export PATH="$PATH:/bluedata/julia-1.4.0/bin"
+#export JULIA_DEPOT_PATH="/bluedata/.julia"
+#export JULIA_NUM_THREADS=8
 
 # added by Anaconda3 2019.03 installer
 # >>> conda init >>>
