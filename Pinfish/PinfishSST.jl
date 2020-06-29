@@ -4,17 +4,18 @@
 using Statistics
 using NCDatasets, Missings, Dates
 using FileIO
-using PlotlyJS
+using Plotly
 
 initflag = 1
 loadflag = 1
 analysisflag = 1
 saveflag = 1
 
-yrrangeall = [yyyy for yyyy=2003:2018];
-yrrangehipinfish = [2012 2013 2015];
-yrrangelopinfish = [2014 2016 2017 2018];
-yrrange1 = [2016];
+yrrangeall = [yyyy for yyyy=2003:2020];
+yrrangehipinfish = [2012; 2013; 2015];
+yrrangelopinfish = [2014; 2016; 2017; 2018; 2019];
+
+yrrange1 = [2020];
 
 ydayNlatest = 157
 yearrange = yrrangeall; # change THIS to select different years!!!
@@ -45,7 +46,7 @@ if loadflag == 1
     sstMAByr = repeat([NaN],size(latMAB,1),size(lonMAB,1),size(yearrange,1));
 
     t0 = Date(2002,1,1)+Day(152-1)
-    tN = Date(2019,1,1)+Day(157-1) #dayofyear(Date(2019,5,5))
+    tN = Date(2020,1,1)+Day(157-1) #dayofyear(Date(2019,5,5))
 
     yday0 = 1;
     global navg = 0;
@@ -77,7 +78,7 @@ if loadflag == 1
         if yyyy == 2002
             yday0 = 152;
             yday1 = yday0;
-        elseif yyyy == 2019
+        elseif yyyy == 2020
             ydayN = ydayNlatest;
             yday2 = ydayN;
         else
@@ -101,7 +102,7 @@ if loadflag == 1
             filename = string(filenamehead, filenametail);
             yday000 = string(yday+1000);
             datapath = string("https://podaac-opendap.jpl.nasa.gov:443/opendap/allData/ghrsst/data/GDS2/L4/GLOB/JPL/MUR/v4.1/", yyyy, "/", yday000[2:end], "/", filename);
-            
+
             navg = navg + 1;
             navg1 = navg1 + 1;
 
@@ -132,7 +133,7 @@ if saveflag == 1
     workdir = "/Users/gong/Documents/Research/Projects/Pinfish/Pinfish/";
     filepath = string(workdir, "sstMAB_", yyyy1, "-", yyyy2, "_yd", syday1000[2:end], "-", syday2000[2:end], ".jld2")
     @save filepath latMAB lonMAB sstMAB sstMAByr navg tyr sstMABts
-end #if    
+end #if
 
 if plotflag == 1
     function sstmap()
