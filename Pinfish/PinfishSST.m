@@ -11,13 +11,25 @@ clear all
 initflag = 1
 loadflag = 1
 csvflag = 1
-analysisflag = 0
+analysisflag = 1
 saveflag = 1
 
 yrrangeall = [2003:2020];
 yrrangehipinfish = [2012 2013 2015 2019];
 yrrangelopinfish = [2014 2016 2017 2018];
 yrrange1 = [2020];
+
+%ydayStart = 1
+%ydayEnd = 60
+%ydayStart = 100
+%ydayEnd = 160
+ydayStart = 150
+ydayEnd = 180
+
+yday1 = ydayStart;
+yday2 = ydayEnd;
+syday1 = num2str(yday1+1000); syday1 = syday1(2:end);
+syday2 = num2str(yday2+1000); syday2 = syday2(2:end);
 
 ydayNlatest = 180
 
@@ -88,21 +100,23 @@ if initflag == 1 | ~exist('latMAB')
             yday0 = 152;
             yday1 = yday0;
             yday2 = 160;
-        case 2019
-            yday1 = 100;
+        case 2020
+            yday1 = ydayStart;
             ydayN = ydayNlatest;
             if yday2 > ydayNlatest
                 yday2 = ydayNlatest;
             end %if
         otherwise
-            yday1 = 100;
-            yday2 = 160;
+            yday1 = ydayStart;
+            yday2 = ydayEnd;
             %yday1 = yday0;
             %yday2 = ydayN;
         end %switch
 
-        yday1 = 90 % end of March
-        yday2 = 276 % beginning of October
+        %yday1 = 90 % end of March
+        %yday2 = 276 % beginning of October
+        syday1 = num2str(yday1+1000); syday1 = syday1(2:end);
+        syday2 = num2str(yday2+1000); syday2 = syday2(2:end);
 
         ydayarr = [yday1:yday2];
 
@@ -118,9 +132,6 @@ if loadflag == 1
         sstMAB1yr = repmat(0,[length(latMAB),length(lonMAB)]);
 
         ydayarr = [yday1:yday2];
-
-        syday1 = num2str(yday1+1000); syday1 = syday1(2:end);
-        syday2 = num2str(yday2+1000); syday2 = syday2(2:end);
 
         sstMABi = repmat(NaN, [length(latMAB), length(lonMAB), length(ydayarr)]);
 
@@ -158,10 +169,10 @@ if loadflag == 1
 end %if loadflag
 
 if csvflag == 1
-    ydind = [90:31:276]-90+1;
+    ydind = [yday1:30:yday2]-yday1+1;
     ydd1 = ydind(1:end-1); ydd1(1) = ydind(1);
     ydd2 = ydind(2:end)-1; ydd2(end) = ydind(end);
-    ydd1start = ydd1+90-1;
+    ydd1start = ydd1+yday1-1;
 
     csvmatrixSlopeSea = repmat(NaN,[length(yrrangeall), length(ydd1)]);
     csvmatrixChesapeake = repmat(NaN,[length(yrrangeall), length(ydd1)]);
@@ -170,8 +181,6 @@ if csvflag == 1
     for ii = 1:length(yrrangeall)
         ii
         yyyy = yearrange(ii)
-        syday1 = num2str(yday1+1000); syday1 = syday1(2:end);
-        syday2 = num2str(yday2+1000); syday2 = syday2(2:end);
         load([workdir 'sstMABi_' num2str(yyyy) '_yd' syday1 '-' syday2 '.mat']);
 
         [LON,LAT] = meshgrid(lonMAB,latMAB);
@@ -193,21 +202,21 @@ if csvflag == 1
     csvmatrixChesapeake = [yrrangeall' , csvmatrixChesapeake];
     csvmatrixChesapeake = [[NaN ydd1start] ; csvmatrixChesapeake];
 
-    csvwrite('sstMABcsv_SlopeSea.csv',csvmatrixSlopeSea);
-    csvwrite('sstMABcsv_Chesapeake.csv',csvmatrixChesapeake);
+    csvwrite(['sstMABcsv_SlopeSea_yd' syday1 '-' syday2 '.csv'],csvmatrixSlopeSea);
+    csvwrite(['sstMABcsv_Chesapeake_yd' syday1 '-' syday2 '.csv'],csvmatrixChesapeake);
 
 end %if
 
 if analysisflag == 1
-    load('sstMAB_2020-2020_yd100-160.mat');
+    load(['sstMABm1_2003-2020_yd' syday1 '-' syday2 '.mat']);
+    syday1 = num2str(yday1+1000); syday1 = syday1(2:end);
+    syday2 = num2str(yday2+1000); syday2 = syday2(2:end);
+
     %sstMAB = repmat(0,[length(latMAB),length(lonMAB)]);
     nnanind = find(~isnan(sstMAB));
     sstMAB(nnanind) = 0.0;
     sstMAB1yr = sstMAB;
     sstMAByr = repmat(NaN,[length(latMAB),length(lonMAB),length(yearrange)]);
-
-    syday1 = num2str(yday1+1000); syday1 = syday1(2:end);
-    syday2 = num2str(yday2+1000); syday2 = syday2(2:end);
 
     navg = 0;
     for ii = 1:length(yearrange)

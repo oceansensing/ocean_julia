@@ -17,15 +17,22 @@ yyyy = 2020;
 %sstnow2015 = load('sstMAB_2015-2015_yd100-160.mat');
 %sstnow2016 = load('sstMAB_2016-2016_yd100-160.mat');
 %sstnow2019 = load('sstMAB_2019-2019_yd100-160.mat');
-load('sstMABm2_2003-2019_yd100-160.mat');
+
+%load('sstMABm2_2003-2020_yd100-160.mat');
+%load('sstMABm2_2003-2020_yd001-060.mat');
+load('sstMABm2_2003-2020_yd150-180.mat');
+%load(['sstMABm2_2003-2020_yd' syday1 '-' syday2 '.mat']);
+
+syday1 = num2str(yday1+1000); syday1 = syday1(2:end)
+syday2 = num2str(yday2+1000); syday2 = syday2(2:end)
 
 sstMABhi = nanmean(sstMAByr(:,:,yrhiind),3);
 sstMABlo = nanmean(sstMAByr(:,:,yrloind),3);
 
 figfmt = 'png' %png or epsc
 
-% 1 = avg, 2 = anom, 4 = hilo, 8 = yearlyanom, 16 = now, 32 = year1anom
-plotflag = 4
+% 0 = time series, 1 = avg, 2 = anom, 4 = hilo, 8 = yearlyanom, 16 = now, 32 = year1anom
+plotflag = 0
 
 if analysisflag == 1
     [LON,LAT] = meshgrid(lonMAB,latMAB);
@@ -51,14 +58,14 @@ if ismember(plotflag,[0])
     hp = plot(tyr,sstMABtsSlopeSea,'*-')
     set(hp,'linewidth',1)
     set(gca,'box','on','tickdir','out','xgrid','on','ygrid','on')
-    ht = title('April & May MAB Slope Sea SST (2003-2019)');
+    ht = title(['MAB Slope Sea SST (2003-2020) (Yearday ' syday1 '-' syday2 ')']);
     hx = xlabel('Time');
     hy = ylabel('Sea Surface Temperature');
     set(gca,'fontsize',18,'fontweight','bold');
     set(ht,'fontsize',20,'fontweight','bold');
     set(hx,'fontsize',18,'fontweight','bold');
     set(hy,'fontsize',18,'fontweight','bold');
-    print('figPinfishSST_timeseriesSlopeSea',['-d' figfmt],'-r300');
+    print(['figPinfishSST_timeseriesSlopeSea_yd' syday1 '-' syday2],['-d' figfmt],'-r300');
     close(fTS)
 
     fTS = figure('unit','inches');
@@ -66,14 +73,14 @@ if ismember(plotflag,[0])
     hp = plot(tyr,sstMABtsChesapeake,'*-')
     set(hp,'linewidth',1)
     set(gca,'box','on','tickdir','out','xgrid','on','ygrid','on')
-    ht = title('April & May Chesapeake Bay SST (2003-2019)');
+    ht = title(['Chesapeake Bay SST (2003-2020) (Yearday ' syday1 '-' syday2 ')']);
     hx = xlabel('Time');
     hy = ylabel('Sea Surface Temperature');
     set(gca,'fontsize',18,'fontweight','bold');
     set(ht,'fontsize',20,'fontweight','bold');
     set(hx,'fontsize',18,'fontweight','bold');
     set(hy,'fontsize',18,'fontweight','bold');
-    print('figPinfishSST_timeseriesChesapeake',['-d' figfmt],'-r300');
+    print(['figPinfishSST_timeseriesChesapeake_yd' syday1 '-' syday2],['-d' figfmt],'-r300');
     close(fTS)
 
 end %if
@@ -85,14 +92,14 @@ if ismember(plotflag,[1 3 6 9])
     set(gca,'box','on','tickdir','out')
     caxis([8 27]); colorbar;
     colormap(jet((round((27-8)/0.1))));
-    ht = title('April & May MAB Slope Sea SST (2003-2019)');
+    ht = title(['MAB Slope Sea SST (2003-2020) Yearday ' syday1 '-' syday2] );
     hx = xlabel('Longitude');
     hy = ylabel('Latitude');
     set(gca,'fontsize',18,'fontweight','bold');
     set(ht,'fontsize',20,'fontweight','bold');
     set(hx,'fontsize',18,'fontweight','bold');
     set(hy,'fontsize',18,'fontweight','bold');
-    print('figPinfishSST_avg5',['-d' figfmt],'-r300');
+    print(['figPinfishSST_avg5_yd' syday1 '-' syday2],['-d' figfmt],'-r300');
     close(favg5)
 end %if
 
@@ -104,14 +111,14 @@ if ismember(plotflag,[16 17 18 20 24])
     set(gca,'box','on','tickdir','out')
     caxis([-6 6]); colorbar;
     colormap(jet(10/0.1));
-    ht = title(['Spring ' num2str(yyyy) ' SST Anomaly (yday 100-160)']);
+    ht = title([num2str(yyyy) ' SST Anomaly (Yearday ' syday1 '-' syday2 ')']);
     hx = xlabel('Longitude');
     hy = ylabel('Latitude');
     set(gca,'fontsize',18,'fontweight','bold');
     set(ht,'fontsize',20,'fontweight','bold');
     set(hx,'fontsize',18,'fontweight','bold');
     set(hy,'fontsize',18,'fontweight','bold');
-    print(['figPinfishSST_now' num2str(yyyy)],['-d' figfmt],'-r300');
+    print(['figPinfishSST_now_yd' syday1 '-' syday2 '_' num2str(yyyy)],['-d' figfmt],'-r300');
     close(fnow)
 end %if
 
@@ -122,14 +129,14 @@ if ismember(plotflag,[2 3 6 10])
     set(gca,'box','on','tickdir','out')
     caxis([-3 3]); colorbar;
     colormap(jet(6/0.1));
-    ht = title('SST anomaly of high Pinfish years');
+    ht = title(['SST anomaly of high Pinfish years (Yearday ' syday1 '-' syday2 ')']);
     hx = xlabel('Longitude');
     hy = ylabel('Latitude');
     set(gca,'fontsize',18,'fontweight','bold');
     set(ht,'fontsize',20,'fontweight','bold');
     set(hx,'fontsize',18,'fontweight','bold');
     set(hy,'fontsize',18,'fontweight','bold');
-    print('figPinfishSST_hianom',['-d' figfmt],'-r300');
+    print(['figPinfishSST_hianom_yd' syday1 '-' syday2 '_' num2str(yyyy)],['-d' figfmt],'-r300');
     close(fhianom)
 
     floanom = figure('unit','inches');
@@ -137,14 +144,14 @@ if ismember(plotflag,[2 3 6 10])
     set(gca,'box','on','tickdir','out')
     caxis([-3 3]); colorbar;
     colormap(jet(6/0.1));
-    ht = title('SST anomaly of low Pinfish years');
+    ht = title(['SST anomaly of low Pinfish years (Yearday ' syday1 '-' syday2 ')']);
     hx = xlabel('Longitude');
     hy = ylabel('Latitude');
     set(gca,'fontsize',18,'fontweight','bold');
     set(ht,'fontsize',20,'fontweight','bold');
     set(hx,'fontsize',18,'fontweight','bold');
     set(hy,'fontsize',18,'fontweight','bold');
-    print('figPinfishSST_loanom',['-d' figfmt],'-r300');
+    print(['figPinfishSST_loanom_yd' syday1 '-' syday2 '_' num2str(yyyy)],['-d' figfmt],'-r300');
     close(floanom)
 end %if
 
@@ -157,14 +164,14 @@ if ismember(plotflag, [4 5 6 7])
     caxis([-3 3]);
     colorbar;
     colormap(jet(6/0.1));
-    ht = title('SST difference between high and low Pinfish years');
+    ht = title(['SST high-low pinfish years (Yearday ' syday1 '-' syday2 ')']);
     hx = xlabel('Longitude');
     hy = ylabel('Latitude');
     set(gca,'fontsize',18,'fontweight','bold');
     set(ht,'fontsize',20,'fontweight','bold');
     set(hx,'fontsize',18,'fontweight','bold');
     set(hy,'fontsize',18,'fontweight','bold');
-    print('figPinfishSST_hilo',['-d' figfmt],'-r300');
+    print(['figPinfishSST_hilo_yd' syday1 '-' syday2 '_' num2str(yyyy)],['-d' figfmt],'-r300');
     close(fhilo)
 end %if
 
@@ -177,14 +184,14 @@ if ismember(plotflag, [8 9 10 12])
         set(gca,'box','on','tickdir','out')
         caxis([-4 4]); colorbar;
         colormap(jet(6/0.1));
-        ht = title(['SST anomaly for ' num2str(tyr(ii))]);
+        ht = title(['SST anomaly for ' num2str(tyr(ii)) ' (Yearday ' syday1 '-' syday2 ')']);
         hx = xlabel('Longitude');
         hy = ylabel('Latitude');
         set(gca,'fontsize',18,'fontweight','bold');
         set(ht,'fontsize',20,'fontweight','bold');
         set(hx,'fontsize',18,'fontweight','bold');
         set(hy,'fontsize',18,'fontweight','bold');
-        print(['figPinfishSST_anom' num2str(tyr(ii))],['-d' figfmt],'-r300');
+        print(['figPinfishSST_anom' num2str(tyr(ii)) '_yd' syday1 '-' syday2],['-d' figfmt],'-r300');
         delete(hp)
     end %for
     close(fSSTmap1)
@@ -200,14 +207,14 @@ if ismember(plotflag, [32 33 34 36 40 48])
     set(gca,'box','on','tickdir','out')
     caxis([-4 4]); colorbar;
     colormap(jet(6/0.1));
-    ht = title(['SST anomaly for ' num2str(tyr(ii))]);
+    ht = title(['SST anomaly for ' num2str(tyr(ii)) ' (Yearday ' syday1 '-' syday2 ')']);
     hx = xlabel('Longitude');
     hy = ylabel('Latitude');
     set(gca,'fontsize',18,'fontweight','bold');
     set(ht,'fontsize',20,'fontweight','bold');
     set(hx,'fontsize',18,'fontweight','bold');
     set(hy,'fontsize',18,'fontweight','bold');
-    print(['figPinfishSST_anom' num2str(tyr(ii))],['-d' figfmt],'-r300');
+    print(['figPinfishSST_anom' num2str(tyr(ii)) '_yd' syday1 '-' syday2],['-d' figfmt],'-r300');
     delete(hp)
     close(fSSTmap1)
 end %if
