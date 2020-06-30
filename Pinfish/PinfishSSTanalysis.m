@@ -5,12 +5,12 @@
 %
 analysisflag = 1
 
-yrrangeall = [2003:2019];
+yrrangeall = [2003:2020];
 yrrangehipinfish = [2012 2013 2015 2019];
 yrrangelopinfish = [2014 2016 2017 2018];
 [tmp,yrhiind] = intersect(yrrangeall,yrrangehipinfish);
 [tmp,yrloind] = intersect(yrrangeall,yrrangelopinfish);
-yyyy = 2019;
+yyyy = 2020;
 
 %sstlop5 = load('sstMAB_2014-2018_yd100-160.mat');
 %ssthip5 = load('sstMAB_2012-2019_yd100-160.mat');
@@ -154,7 +154,7 @@ if ismember(plotflag, [4 5 6 7])
     set(fhilo,'paperposition',[0 0 10 8]);
     hp = pcolor(lonMAB,latMAB,sstMABhi-sstMABlo); shading flat;
     set(gca,'box','on','tickdir','out');
-    caxis([-3 3]); 
+    caxis([-3 3]);
     colorbar;
     colormap(jet(6/0.1));
     ht = title('SST difference between high and low Pinfish years');
