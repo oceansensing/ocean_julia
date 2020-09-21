@@ -147,9 +147,7 @@ Pkg.add("UnitfulAstro")
 
 Pkg.add("DistributedArrays")
 Pkg.add("Dagger")
-Pkg.add("CUDAnative")
-Pkg.add("GPUArrays")
-Pkg.add("CuArrays")
+Pkg.add("CUDA")
 
 Pkg.add("Cxx")
 #Pkg.add("Immerse")
@@ -170,6 +168,8 @@ Pkg.add("Plots")
 Pkg.add("StatsPlots")
 Pkg.add("PlotlyJS")
 Pkg.add("ORCA")
+Pkg.add("ImageMagick")
+Pkg.add("ImageIO")
 #Pkg.add("Juno")
 
 #ENV["JULIA_PARDISO"] = "/Users/gong/lib/Pardiso/libpardiso600-MACOS-X86-64.dylib"
