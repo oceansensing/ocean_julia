@@ -1,5 +1,6 @@
-alias julia="/Applications/Julia-1.4.app/Contents/Resources/julia/bin/julia"
+alias julia="/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia"
 #alias matlabb="/Applications/MATLAB_R2019b.app/bin/matlab -nodesktop"
+export JULIA_NUM_THREADS=4
 export PATH=/Users/$USER/anaconda3/bin:$PATH
 
 #export PATH="$PATH:/bluedata/julia-1.4.0/bin"
@@ -22,3 +23,5 @@ else
 fi
 unset __conda_setup
 # <<< conda init <<<
+
+#export LD_LIBRARY_PATH=$HOME/.julia/conda/3/lib
