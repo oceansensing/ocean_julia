@@ -1,6 +1,7 @@
 module C2PO
 
-export gc_distance, rad2deg, deg2rad, histc, meshgrid, nan, findNaNmin, findNaNmax
+using Dates, Missings
+export gc_distance, rad2deg, deg2rad, histc, meshgrid, nan, findNaNmin, findNaNmax, nanfy, oneDize, datetimemissing2unixtimenan
 
 function gc_distance(lat1deg::Float64,lon1deg::Float64,lat2deg::Float64,lon2deg::Float64)
     # This code implements Vincenty 1975: https://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf
@@ -143,5 +144,37 @@ end
 #    xout = reshape(repeat(x, outer=prod(shape)),[collect(size(x));collect(shape)]...);
 #    return xout;
 #end
+
+function nanfy(datawithmissing)
+    collect(Missings.replace(datawithmissing, NaN));
+end
+
+# oneDize turns multidimensional array into 1D array
+function oneDize(nddata)
+    return collect(reshape(nddata, prod(size(nddata))));
+end
+
+# datetimemissing2unixtimenan converts arrays with type of Union{Missing,DateTime} to Float64 with NaN for fillvalue
+function datetimemissing2unixtimenan(datetimemissing::Array{Union{Missing, DateTime}})
+    unixtimenan = Array{Float64}(undef,size(datetimemissing));
+    gind = findall(ismissing.(datetimemissing) .== false);
+    bind = findall(ismissing.(datetimemissing) .== true);
+    unixtimenan[gind] .= Dates.datetime2unix.(disallowmissing(datetimemissing[gind]));
+    unixtimenan[bind] .= NaN;
+    return unixtimenan
+end
+
+function datetimemissing2unixtimenan(datetimemissing::Array{DateTime})
+    unixtimenan = Array{Float64}(undef,size(datetimemissing));
+    unixtimenan .= Dates.datetime2unix.(datetimemissing);
+    return unixtimenan
+end
+
+function datetimemissing2unixtimenan(datetimemissing::Array{Missing})
+    unixtimenan = Array{Float64}(undef,size(datetimemissing));
+    unixtimenan .= NaN;
+    return unixtimenan
+end
+
 
 end
