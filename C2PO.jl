@@ -176,5 +176,9 @@ function datetimemissing2unixtimenan(datetimemissing::Array{Missing})
     return unixtimenan
 end
 
+function runningavg!(avgfield, nowfield, i, n)
+    avgfield = ((i-1)/n * avgfield + nowfield/n) / (i/n);
+    return avgfield;
+end
 
 end

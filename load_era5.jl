@@ -24,6 +24,11 @@ mutable struct ERA5surf
     tp::Array{AbstractFloat, 3} # total precipation
 end
 
+function runningavg!(avgfield, nowfield, i, n)
+    avgfield = ((i-1)/n * avgfield + nowfield/n) / (i/n);
+    return avgfield;
+end
+
 plotly()
 
 era5dir = "/Users/gong/oceansensing Dropbox/C2PO/Data/ERA5/"
@@ -38,3 +43,17 @@ era5 = NCDataset(datadir * era5file, "r");
 time = era5["time"][:];
 lon = era5["longitude"][:];
 lat = era5["latitude"][:];
+ntime = length(time);
+
+u10_1mo = zeros(Float64, length(lon), length(lat));
+v10_1mo = deepcopy(u10_1mo);
+t2m_1mo = deepcopy(u10_1mo);
+sst_1mo = deepcopy(u10_1mo);
+
+for i = 1:ntime
+    #u10_1mo = ((i-1)/ntime * u10_1mo + era5["u10"][:,:,i]/ntime) / (i/ntime);
+    u10_1mo = runningavg!(u10_1mo, era5["u10"][:,:,i], i, ntime);
+    v10_1mo = runningavg!(v10_1mo, era5["v10"][:,:,i], i, ntime);
+    t2m_1mo = runningavg!(t2m_1mo, era5["t2m"][:,:,i], i, ntime);
+    sst_1mo = runningavg!(sst_1mo, era5["sst"][:,:,i], i, ntime);
+end
