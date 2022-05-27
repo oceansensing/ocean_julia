@@ -88,8 +88,8 @@ function meshgrid(xgrid::UnitRange{<:Integer},ygrid::UnitRange{<:Integer})
     #maxx = maximum(xgrid);
     #miny = minimum(ygrid);
     #maxy = maximum(ygrid);
-    i = [i for j in ygrid[1]:ygrid[end], i in xgrid[1]:xgrid[end]];
-    j = [j for j in ygrid[1]:ygrid[end], i in xgrid[1]:xgrid[end]];
+    i = [i for i in xgrid[1]:xgrid[end], j in ygrid[1]:ygrid[end]];
+    j = [j for i in xgrid[1]:xgrid[end], j in ygrid[1]:ygrid[end]];
     return (i,j)
 end
 
