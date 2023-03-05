@@ -1,7 +1,7 @@
 module C2PO
 
 using Dates, Missings
-export gc_distance, rad2deg, deg2rad, histc, meshgrid, nan, findNaNmin, findNaNmax, nanfy, oneDize, datetimemissing2unixtimenan
+export gc_distance, rad2deg, deg2rad, histc, meshgrid, nan, findNaNmin, findNaNmax, nanfy, oneDize, datetimemissing2unixtimenan, cdnlp, stresslp
 
 function gc_distance(lat1deg::Float64,lon1deg::Float64,lat2deg::Float64,lon2deg::Float64)
     # This code implements Vincenty 1975: https://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf
@@ -180,5 +180,68 @@ function runningavg!(avgfield, nowfield, i, n)
     avgfield = ((i-1)/n * avgfield + nowfield/n) / (i/n);
     return avgfield;
 end
+
+function stresslp(sp, z, rhoa=1.22)
+    # stresslp: computes neutral wind stress following Large and Pond (1981). tau = stresslp(sp,z,rhoa) computes the neutral wind stress given the wind speed at height z following Large and Pond (1981), J. Phys. Oceanog., 11, 324-336. Air density is an optional input, otherwise assumed to be constant (1.22 kg/m^3). 
+
+    #INPUT:   sp    - wind speed             [m/s]
+    #         z     - measurement height     [m]
+    #         rhoa  - air_density (optional) [kg/m^3]
+
+    #OUTPUT:  tau   - wind stress            [N/m^2]
+
+    # 3/8/97: version 1.0
+    # 8/26/98: version 1.1 (revised by RP)
+    # 4/2/99: version 1.2 (optional air density added by AA)
+    # 8/5/99: version 2.0
+    # 3/5/23: ported to Julia by Donglai Gong
+
+    include("as_consts.jl");
+    if (@isdefined rho_air) == false
+        rhoa = rho_air; 
+    end
+    (cd, u10) = cdnlp(sp, z);
+    tau=rhoa .* (cd .* u10 .^ 2);
+    return tau;
+end
+
+function cdnlp(sp, z)
+    # cdnlp: computes neutral drag coefficient following Large&Pond (1981).
+    # [cd,u10]=cdnlp(sp,z) computes the neutral drag coefficient and wind speed at 10m given the wind speed at height z following Large and Pond (1981), J. Phys. Oceanog., 11, 324-336. 
+    
+    # INPUT:   sp - wind speed  [m/s]
+    #          z - measurement height [m]
+    
+    # OUTPUT:  Cd - neutral drag coefficient at 10m
+    #          u10 - wind speed at 10m  [m/s]
+    
+    
+    # 3/8/97: version 1.0
+    # 8/26/98: version 1.1 (vectorized by RP)
+    # 8/5/99: version 2.0
+    # 3/5/2023: ported to Julia by Donglai Gong
+    
+    include("as_consts.jl"); # define physical constants
+    
+    if typeof(sp) == Float64
+        sp = [sp];
+    end
+
+    a = log.(z ./ 10.0) ./ kappa;  # log-layer correction factor
+    tol = 0.001;            # tolerance for iteration [m/s]
+    u10o = zeros(size(sp));
+    Cd = 1.15e-3 .* ones(size(sp));
+    u10 = sp ./ (1 .+ a .* sqrt.(Cd));
+    ii = abs.(u10 .- u10o) .> tol; 
+    while any(ii)
+        u10o = u10;
+        Cd=4.9e-4 .+ 6.5e-5 .* u10o;    # compute cd(u10)
+        smallwindi = findall(u10o .< 10.15385);
+        Cd[smallwindi] .= 1.15e-3;
+        u10 = sp ./ (1 .+ a .* sqrt.(Cd));   # next iteration
+        ii = abs.(u10 .- u10o) .> tol;      # keep going until iteration converges
+    end
+    return (Cd, u10);
+end    
 
 end
