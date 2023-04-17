@@ -244,4 +244,18 @@ function cdnlp(sp, z)
     return (Cd, u10);
 end    
 
+# https://discourse.julialang.org/t/indices-of-intersection-of-two-arrays/23043/20
+function intersectalajulia2(a,b)
+    ia = findall(in(b), a)
+    ib = findall(in(view(a,ia)), b)
+    return unique(view(a,ia)), ia, ib[indexin(view(a,ia), view(b,ib))]
+end
+
+function intersectalajulia4(a,b)
+    ab=intersect(a,b)
+    ia = [findall(==(e), a) for e in ab]
+    ib = [findall(==(e), b) for e in ab]
+    return hcat(ab, ia,ib)
+end
+
 end
