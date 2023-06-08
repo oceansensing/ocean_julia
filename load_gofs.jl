@@ -16,7 +16,9 @@ t0 = tnow;
 
 # extract model grid and time indices
 lat_gofs = gofs["lat"][:];
-lon_gofs = gofs["lon"][:] - 360.0;
+lon_gofs = gofs["lon"][:];
+lonindtmp = findall(lon_gofs .> 180.0);
+lon_gofs[lonindtmp] = lon_gofs[lonindtmp] .- 360.0;
 t_gofs = Dates.datetime2unix.(gofs["time"][:]);
 
 # find the grid and time indices of interesting
