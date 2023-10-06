@@ -11,13 +11,21 @@ loadflag = 1
 analysisflag = 1
 saveflag = 1
 
-yrrangeall = [yyyy for yyyy=2003:2020];
+yrrangeall = [yyyy for yyyy=2003:2023];
 yrrangehipinfish = [2012; 2013; 2015];
 yrrangelopinfish = [2014; 2016; 2017; 2018; 2019];
-
 yrrange1 = [2020];
 
-ydayNlatest = 157
+ydayNlatest = 275;
+ydayStart = 150;
+ydayEnd = 180;
+
+yday1 = ydayStart;
+yday2 = ydayEnd;
+
+syday1 = string(yday1, pad=3);
+syday2 = string(yday2, pad=3);
+
 yearrange = yrrangeall; # change THIS to select different years!!!
 
 if initflag == 1 #| !exist('latMAB')
