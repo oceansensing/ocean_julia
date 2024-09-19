@@ -1,5 +1,6 @@
 module EOS
-using GSW
+using GibbsSeaWater
+GSW = GibbsSeaWater;
 
 export rho_s, rho_c
 
@@ -16,6 +17,11 @@ function rho_c(temp::Float64, cond::Float64, pres::Float64, lon= -75.0, lat=37.7
     ctmp = GSW.gsw_ct_from_t(saltA, temp, pres)
     rho = GSW.gsw_rho(saltA, ctmp, pres)
     return rho
+end
+
+function z_from_p(pres::Any, lon::Any)  
+    z = GSW.gsw_z_from_p.(pres, lat, 0.0, 0.0);
+    return z
 end
 
 end
