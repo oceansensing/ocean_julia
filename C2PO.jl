@@ -16,9 +16,9 @@ function missing2nan(varin)
         if isempty(missind) != true
             varout[missind] .= NaN;
         end
-    elseif (typeof(varin) == Vector{Union{Missing, Float64}}) | (typeof(varin) == Vector{Union{Missing, Float32}}) | (typeof(varin) == Matrix{Union{Missing, Float64}}) | (typeof(varin) == Matrix{Union{Missing, Float32}})
+    elseif (typeof(varin) == Vector{Union{Missing, Float64}}) | (typeof(varin) == Vector{Union{Missing, Float32}}) | (typeof(varin) == Matrix{Union{Missing, Float64}}) | (typeof(varin) == Matrix{Union{Missing, Float32}}) | (typeof(varin) == Array{Union{Missing, Float32}, 4}) | (typeof(varin) == Array{Union{Missing, Float64}, 4}) | (typeof(varin) == Array{Union{Missing, Float32}, 3}) | (typeof(varin) == Array{Union{Missing, Float32}, 3})
         varout = Float64.(collect(Missings.replace(varin, NaN)));
-    elseif (typeof(varin) == Vector{Missing}) | (typeof(varin) == Matrix{Missing})
+    elseif (typeof(varin) == Vector{Missing}) | (typeof(varin) == Matrix{Missing}) | (typeof(varin) == Array{Missing, 3}) | (typeof(varin) == Array{Missing, 4})
         varout = Array{Float64}(undef,size(collect(varin)));
         varout .= NaN; 
     else
