@@ -5,7 +5,7 @@ export missing2nan, gc_distance, rad2deg, deg2rad, histc, meshgrid, nan, findNaN
 
 function missing2nan(varin)
     varin = collect(varin);
-    if (typeof(varin) == Vector{Union{Missing, Int64}}) | (typeof(varin) == Matrix{Union{Missing, Int64}})
+    if (typeof(varin) == Vector{Union{Missing, Int64}}) | (typeof(varin) == Matrix{Union{Missing, Int64}}) | (typeof(varin) == Vector{Union{Missing, Int32}}) | (typeof(varin) == Matrix{Union{Missing, Int32}}) | (typeof(varin) == Vector{Union{Missing, Int16}}) | (typeof(varin) == Matrix{Union{Missing, Int16}})
         varout = Array{Float64}(undef,size(collect(varin)));
         varintypes = typeof.(varin);
         notmissind = findall(varintypes .!= Missing);
@@ -16,7 +16,7 @@ function missing2nan(varin)
         if isempty(missind) != true
             varout[missind] .= NaN;
         end
-    elseif (typeof(varin) == Vector{Union{Missing, Float64}}) | (typeof(varin) == Matrix{Union{Missing, Float64}})
+    elseif (typeof(varin) == Vector{Union{Missing, Float64}}) | (typeof(varin) == Vector{Union{Missing, Float32}}) | (typeof(varin) == Matrix{Union{Missing, Float64}}) | (typeof(varin) == Matrix{Union{Missing, Float32}})
         varout = Float64.(collect(Missings.replace(varin, NaN)));
     elseif (typeof(varin) == Vector{Missing}) | (typeof(varin) == Matrix{Missing})
         varout = Array{Float64}(undef,size(collect(varin)));
