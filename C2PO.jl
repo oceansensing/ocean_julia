@@ -1,7 +1,11 @@
 module C2PO
 
-using Dates, Missings
-export missing2nan, gc_distance, rad2deg, deg2rad, histc, meshgrid, nan, findNaNmin, findNaNmax, nanfy, oneDize, datetimemissing2unixtimenan, cdnlp, stresslp
+using Distributed
+@everywhere begin
+    using Dates, Missings
+end
+
+export missing2nan, datetime2yearday, yearday2datetime, unix2yearday, yearday2unix, pyrow2jlcol, gc_distance, rad2deg, deg2rad, histc, meshgrid, nan, findNaNmin, findNaNmax, nanfy, oneDize, datetimemissing2unixtimenan, cdnlp, stresslp, intersectalajulia2, intersectalajulia4, runningavg!
 
 function missing2nan(varin)
     varin = collect(varin);
@@ -26,6 +30,47 @@ function missing2nan(varin)
     end
 
     return varout
+end
+
+# DG 2024-09-06, adopted from seaexplorer
+function datetime2yearday(xdt::DateTime)
+    year = Dates.year(xdt);
+    yday = Dates.dayofyear(xdt);
+    seconds_in_day = 86400;
+    ydayfrac = yday + (Dates.hour(xdt) * 3600 .+ Dates.minute(xdt) * 60 .+ Dates.second(xdt)) ./ seconds_in_day;
+    return ydayfrac;
+end
+
+# DG 2024-09-06, with help from ChatGPT 4o
+function yearday2datetime(yyyy::Int, yearday::Float64)
+    # Separate integer part (day) and fractional part (time of day)
+    int_day = Int(floor(yearday))  # Get the integer part of the day
+    fractional_day = yearday - int_day  # Get the fractional part of the day
+
+    # Convert fractional day into hours, minutes, and seconds
+    total_seconds = Int(round(fractional_day * 86400))  # 86400 seconds in a day
+    hours = div(total_seconds, 3600)  # Number of full hours
+    minutes = div(total_seconds % 3600, 60)  # Number of full minutes
+    seconds = total_seconds % 60  # Remaining seconds
+
+    # Start from January 1st of the given year and add the number of days
+    dateint = Date(yyyy, 1, 1) + Day(int_day - 1)  # Subtract 1 because days start from 1
+
+    # Create the final DateTime with the computed hours, minutes, and seconds
+    return DateTime(year(dateint), month(dateint), day(dateint), hours, minutes, seconds)
+    #return DateTime(date) + Time(hours, minutes, seconds)
+end
+
+function unix2yearday(unixt::Float64)
+    return datetime2yearday(unix2datetime(unixt));
+end
+
+function yearday2unix(yyyy::Int, yearday::Float64)
+    return unix2datetime(yearday2datetime(yyyy, yearday));
+end
+
+function pyrow2jlcol(invar::Matrix{Float64})
+    return reverse(rotr90(invar), dims = 2);
 end
 
 function gc_distance(lat1deg::Float64,lon1deg::Float64,lat2deg::Float64,lon2deg::Float64)
