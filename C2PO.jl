@@ -7,7 +7,7 @@ end
 
 export missing2nan, datetime2yearday, yearday2datetime, unix2yearday, yearday2unix, pyrow2jlcol, gc_distance, rad2deg, deg2rad, histc, meshgrid, nan, findNaNmin, findNaNmax, nanfy, oneDize, datetimemissing2unixtimenan, cdnlp, stresslp, intersectalajulia2, intersectalajulia4, runningavg!
 
-function missing2nan(varin)
+function missing2nan(varin::AbstractFloat)
     varin = collect(varin);
     if (typeof(varin) == Vector{Union{Missing, Int64}}) | (typeof(varin) == Matrix{Union{Missing, Int64}}) | (typeof(varin) == Vector{Union{Missing, Int32}}) | (typeof(varin) == Matrix{Union{Missing, Int32}}) | (typeof(varin) == Vector{Union{Missing, Int16}}) | (typeof(varin) == Matrix{Union{Missing, Int16}})
         varout = Array{Float64}(undef,size(collect(varin)));
@@ -68,6 +68,13 @@ end
 function yearday2unix(yyyy::Int, yearday::Float64)
     return unix2datetime(yearday2datetime(yyyy, yearday));
 end
+
+# DG 2024-11-13, code provided by Grok2
+function datenum2datetime(matlab_datenum::AbstractFloat)
+    julia_datetime = DateTime(0) + Dates.Millisecond(round(Int, (matlab_datenum - 1) * 24 * 60 * 60 * 1000));
+    return julia_datetime;
+end
+
 
 function pyrow2jlcol(invar::Matrix{Float64})
     return reverse(rotr90(invar), dims = 2);
