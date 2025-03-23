@@ -335,4 +335,58 @@ function intersectalajulia4(a,b)
     return hcat(ab, ia,ib)
 end
 
+# linearly scale between xmin and xmax using the range provided by xscl
+function minmaxscaler(x, xscl; zeromin::Bool=false)
+    if zeromin == false
+        xmin = minimum(skipmissing(x));
+    else
+        xmin = 0.0;
+    end
+
+    xmax = maximum(skipmissing(x));
+    if xmin != xmax
+        x_std = (x .- xmin) ./ (xmax - xmin);
+        x_scl = x_std .* (maximum(xscl) - minimum(xscl)) .+ minimum(xscl);
+    else
+        x_scl = x;
+    end
+    return x_scl, xmin, xmax;
+end
+
+# linearly scale between xmin and xmax using the range provided in xscl
+function minmaxscaler(x, xscl, xminmax)
+    xmin = minimum(skipmissing(xminmax));
+    xmax = maximum(skipmissing(xminmax));
+    if minimum(skipmissing(x)) != maximum(skipmissing(x))
+        x_std = (x .- xmin) ./ (xmax - xmin);
+        x_scl = x_std .* (maximum(xscl) - minimum(xscl)) .+ minimum(xscl);
+    else
+        x_scl = x;
+    end
+    return x_scl, xmin, xmax;
+end
+
+# find standard deviation of a variable, then scale to +/- n std. dev.
+function varscaler(varin,nstd=2.0)
+    varstd = std(skipmissing(varin));
+    varmean = mean(skipmissing(varin));
+    varscl = (varin .- varmean) ./ (nstd * varstd);
+    return varscl, varmean, varstd, nstd;
+end
+
+# manually scale the input variable using specified mean and standard deviation
+function varscaler_manual(varin, varmean, varstd, nstd=2.0)
+    return (varin .- varmean) ./ (nstd * varstd);
+end
+
+# use specified mean and standard deviation to 'unscale' the input variable
+function varunscaler(varscl, varmean, varstd, nstd)
+    return varscl .* (nstd * varstd) .+ varmean;
+end
+
+# this function returns the indices for tt within a specified time period
+function findtind(tt, trange)
+    return findall(minimum(trange) .<= tt .<= maximum(trange));
+end
+
 end
